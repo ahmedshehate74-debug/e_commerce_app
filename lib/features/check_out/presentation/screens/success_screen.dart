@@ -6,7 +6,18 @@ import '../../../../core/resources/color_manager.dart';
 import '../../../../core/resources/styles_manager.dart';
 
 class SuccessScreen extends StatelessWidget {
-  const SuccessScreen({super.key});
+  final String paymentId;
+  final String paymentMethod;
+  final String status;
+  final double totalPrice;
+
+  const SuccessScreen({
+    super.key,
+    required this.paymentId,
+    required this.paymentMethod,
+    required this.status,
+    required this.totalPrice,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +75,31 @@ class SuccessScreen extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      _buildItem("Order Number", "#258963"),
+                      _buildItem(
+                        "Payment ID",
+                        paymentId,
+                      ),
+
                       Divider(height: 25.h),
-                      _buildItem("Payment Method", "Visa"),
+
+                      _buildItem(
+                        "Payment Method",
+                        paymentMethod,
+                      ),
+
                       Divider(height: 25.h),
-                      _buildItem("Status", "Paid"),
+
+                      _buildItem(
+                        "Amount",
+                        "EGP ${totalPrice.toStringAsFixed(0)}",
+                      ),
+
+                      Divider(height: 25.h),
+
+                      _buildItem(
+                        "Status",
+                        status,
+                      ),
                     ],
                   ),
                 ),
@@ -87,11 +118,11 @@ class SuccessScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                     Navigator.pushNamedAndRemoveUntil(
-  context,
-  Routes.mainRoute,
-  (route) => false,
-);
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        Routes.mainRoute,
+                        (route) => false,
+                      );
                     },
                     child: Text(
                       "Continue Shopping",
@@ -120,12 +151,17 @@ class SuccessScreen extends StatelessWidget {
             fontSize: 16,
           ),
         ),
+
         const Spacer(),
-        Text(
-          value,
-          style: getBoldStyle(
-            color: ColorManager.textColor,
-            fontSize: 16,
+
+        Flexible(
+          child: Text(
+            value,
+            textAlign: TextAlign.end,
+            style: getBoldStyle(
+              color: ColorManager.textColor,
+              fontSize: 16,
+            ),
           ),
         ),
       ],

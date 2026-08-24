@@ -17,7 +17,8 @@ class PaymentMethodScreen extends StatefulWidget {
 
   const PaymentMethodScreen({
     super.key,
-    required this.totalPrice, required this.cartId,
+    required this.totalPrice,
+    required this.cartId,
   });
 
   @override
@@ -44,48 +45,52 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         ),
       ),
       body: BlocConsumer<CheckoutCubit, CheckoutState>(
-  listener: (context, state) {
-    state.whenOrNull(
-      loading: () {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (_) => const Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      },
+        listener: (context, state) {
+          state.whenOrNull(
+            loading: () {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            },
+            success: (paymentId, paymentMethod, status) {
+              // اقفل Loading Dialog
+              Navigator.pop(context);
 
-      success: () {
-        Navigator.pop(context);
+              Navigator.pushReplacementNamed(
+                context,
+                Routes.successScreen,
+                arguments: {
+                  "paymentId": paymentId,
+                  "paymentMethod": paymentMethod,
+                  "status": status,
+                  "totalPrice": widget.totalPrice,
+                },
+              );
+            },
+            failure: (message) {
+              Navigator.pop(context);
 
-        Navigator.pushReplacementNamed(
-          context,
-          Routes.successScreen,
-        );
-      },
-
-      failure: (message) {
-        Navigator.pop(context);
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(message),
-          ),
-        );
-      },
-    );
-  },
-
-  builder: (context, state) {
-    return Padding(
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(message),
+                ),
+              );
+            },
+          );
+        },
+        builder: (context, state) {
+          return Padding(
             padding: EdgeInsets.symmetric(
               horizontal: 18.w,
               vertical: 18.h,
             ),
             child: Column(
               children: [
-                 TotalPriceCard(
+                TotalPriceCard(
                   totalPrice: widget.totalPrice,
                 ),
                 SizedBox(height: 45.h),
@@ -144,17 +149,31 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
                       switch (selectedMethod) {
                         case PaymentMethodType.visa:
                         case PaymentMethodType.masterCard:
-                        case PaymentMethodType.paypal:
                         case PaymentMethodType.applePay:
-      context.read<CheckoutCubit>().makePayment(cartId: widget.cartId,);
+                          context.read<CheckoutCubit>().makePayment(
+                                cartId: widget.cartId,
+                                totalPrice: widget.totalPrice,
+                              );
+                          break;
+
+                        case PaymentMethodType.paypal:
+                          context.read<CheckoutCubit>().makePaypalPayment(
+                                context: context,
+                                totalPrice: widget.totalPrice,
+                              );
                           break;
 
                         case PaymentMethodType.cashOnDelivery:
-                         Navigator.pushReplacementNamed(
-  context,
-  Routes.successScreen,
-);
-                          
+                          Navigator.pushReplacementNamed(
+                            context,
+                            Routes.successScreen,
+                            arguments: {
+                              "paymentId": "N/A",
+                              "paymentMethod": "Cash On Delivery",
+                              "status": "Pending",
+                              "totalPrice": widget.totalPrice,
+                            },
+                          );
                           break;
                       }
                     },

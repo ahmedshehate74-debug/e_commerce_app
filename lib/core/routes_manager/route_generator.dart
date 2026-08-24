@@ -87,9 +87,16 @@ class RouteGenerator {
   return MaterialPageRoute(
     builder: (_) => ResetPasswordScreen(),
   );
-  case Routes.successScreen:
+ case Routes.successScreen:
+  final args = settings.arguments as Map<String, dynamic>;
+
   return MaterialPageRoute(
-    builder: (_) => const SuccessScreen(),
+    builder: (_) => SuccessScreen(
+      paymentId: args["paymentId"] as String,
+      paymentMethod: args["paymentMethod"] as String,
+      status: args["status"] as String,
+      totalPrice: args["totalPrice"] as double,
+    ),
   );
       default:
         return unDefinedRoute();

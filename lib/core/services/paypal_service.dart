@@ -1,65 +1,97 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_paypal_payment/flutter_paypal_payment.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class PaypalService {
   Future<void> makePaypalPayment({
     required BuildContext context,
     required String clientId,
     required String secretKey,
     required double total,
-    required VoidCallback onSuccess,
+    required void Function(
+      String paymentId,
+      String paymentMethod,
+      String status,
+    ) onSuccess,
     required VoidCallback onCancel,
-    required Function(dynamic) onError,
+    required void Function(dynamic error) onError,
   }) async {
-    Navigator.push(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (_) => PaypalCheckoutView(
-          sandboxMode: true,
+        builder: (BuildContext context) {
+          return PaypalCheckoutView(
+            sandboxMode: true,
 
-          clientId: clientId,
+            clientId: clientId,
+            secretKey: secretKey,
 
-          secretKey: secretKey,
+            transactions: [
+              {
+                "amount": {
+                  "total": total.toStringAsFixed(2),
+                  "currency": "USD",
+                  "details": {
+                    "subtotal": total.toStringAsFixed(2),
+                    "shipping": "0",
+                    "shipping_discount": 0,
+                  },
+                },
 
-          transactions: [
-            {
-              "amount": {
-                "total": total.toStringAsFixed(2),
-                "currency": "USD",
-                "details": {
-                  "subtotal": total.toStringAsFixed(2),
-                  "shipping": "0",
-                  "shipping_discount": 0
-                }
+                "description": "E-Commerce Order",
+
+                "item_list": {
+                  "items": [
+                    {
+                      "name": "E-Commerce Products",
+                      "quantity": 1,
+                      "price": total.toStringAsFixed(2),
+                      "currency": "USD",
+                    },
+                  ],
+                },
               },
-              "description": "E-Commerce Order",
-              "item_list": {
-                "items": [
-                  {
-                    "name": "Products",
-                    "quantity": 1,
-                    "price": total.toStringAsFixed(2),
-                    "currency": "USD",
-                  }
-                ]
-              }
-            }
-          ],
+            ],
 
-          note: "Thanks",
+            note: "Thank you for your order.",
 
-          onSuccess: (params) {
-            onSuccess();
-          },
+            onSuccess: (Map params) {
+              log("PayPal Success: $params");
 
-          onError: (error) {
-            onError(error);
-          },
+              final paymentId =
+                  params["paymentId"]?.toString() ??
+                  params["paymentID"]?.toString() ??
+                  params["orderID"]?.toString() ??
+                  params["id"]?.toString() ??
+                  "N/A";
 
-          onCancel: () {
-            onCancel();
-          },
-        ),
+              final status =
+                  params["status"]?.toString() ??
+                  params["state"]?.toString() ??
+                  "COMPLETED";
+
+              onSuccess(
+                paymentId,
+                "PayPal",
+                status,
+              );
+            },
+
+            onError: (error) {
+              log("PayPal Error: $error");
+
+              onError(error);
+            },
+
+            onCancel: () {
+              log("PayPal Cancelled");
+
+              onCancel();
+            },
+          );
+        },
       ),
     );
   }

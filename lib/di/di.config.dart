@@ -13,6 +13,7 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
 import '../core/network/stripe_api_manager.dart' as _i271;
+import '../core/services/paypal_service.dart' as _i662;
 import '../core/services/stripe_service.dart' as _i578;
 import '../data/api_manager.dart' as _i704;
 import '../data/data_sources/remote_data_source/auth_remote_data_source.dart'
@@ -27,23 +28,16 @@ import '../data/data_sources/remote_data_source/impl/checkout_remote_data_source
     as _i779;
 import '../data/data_sources/remote_data_source/impl/home_data_source_impl.dart'
     as _i77;
-import '../data/data_sources/remote_data_source/impl/order_remote_data_source_impl.dart'
-    as _i117;
-import '../data/data_sources/remote_data_source/order_remote_data_source.dart'
-    as _i337;
 import '../data/repository_impl/auth_repository_imp.dart' as _i719;
 import '../data/repository_impl/checkout_remote_data_source_impl.dart' as _i425;
 import '../data/repository_impl/home_repository_impl.dart' as _i24;
-import '../data/repository_impl/order_repository_impl.dart' as _i977;
 import '../domain/repository/auth_repoistory.dart' as _i430;
 import '../domain/repository/checkout_repository.dart' as _i6;
 import '../domain/repository/home_repoistory.dart' as _i653;
-import '../domain/repository/order_repository.dart' as _i177;
 import '../domain/use_cases/add_to_cart_use_case.dart' as _i994;
 import '../domain/use_cases/add_to_wishlist_use_case.dart' as _i168;
 import '../domain/use_cases/create_customer_use_case.dart' as _i649;
 import '../domain/use_cases/create_ephemeral_key_use_case.dart' as _i480;
-import '../domain/use_cases/create_order_use_case.dart' as _i551;
 import '../domain/use_cases/create_payment_intent_use_case.dart' as _i577;
 import '../domain/use_cases/delete_cart_item_use_case.dart' as _i914;
 import '../domain/use_cases/forget_password_use_cases.dart' as _i218;
@@ -98,6 +92,7 @@ extension GetItInjectableX on _i174.GetIt {
       environment,
       environmentFilter,
     );
+    gh.factory<_i662.PaypalService>(() => _i662.PaypalService());
     gh.factory<_i578.StripeService>(() => _i578.StripeService());
     gh.singleton<_i271.StripeApiManager>(() => _i271.StripeApiManager());
     gh.singleton<_i704.ApiManager>(() => _i704.ApiManager());
@@ -115,14 +110,17 @@ extension GetItInjectableX on _i174.GetIt {
         _i447.AuthRemoteDataSourceImpl(apiManager: gh<_i704.ApiManager>()));
     gh.lazySingleton<_i404.HomeRemoteDataSource>(
         () => _i77.HomeDataSourceImpl(apiManager: gh<_i704.ApiManager>()));
-    gh.factory<_i337.OrderRemoteDataSource>(
-        () => _i117.OrderRemoteDataSourceImpl(gh<_i704.ApiManager>()));
-    gh.factory<_i177.OrderRepository>(
-        () => _i977.OrderRepositoryImpl(gh<_i337.OrderRemoteDataSource>()));
     gh.factory<_i430.AuthRepository>(() => _i719.AuthRepositoryImp(
         authRemoteDataSource: gh<_i384.AuthRemoteDataSource>()));
     gh.factory<_i653.HomeRepository>(
         () => _i24.HomeRepositoryImpl(gh<_i404.HomeRemoteDataSource>()));
+    gh.factory<_i103.CheckoutCubit>(() => _i103.CheckoutCubit(
+          gh<_i649.CreateCustomerUseCase>(),
+          gh<_i577.CreatePaymentIntentUseCase>(),
+          gh<_i480.CreateEphemeralKeyUseCase>(),
+          gh<_i578.StripeService>(),
+          gh<_i662.PaypalService>(),
+        ));
     gh.factory<_i994.AddToCartUseCase>(
         () => _i994.AddToCartUseCase(repository: gh<_i653.HomeRepository>()));
     gh.factory<_i168.AddToWishlistUseCase>(() =>
@@ -161,8 +159,6 @@ extension GetItInjectableX on _i174.GetIt {
         _i942.GetProductsBySubCategoryUseCase(gh<_i653.HomeRepository>()));
     gh.factory<_i356.GetSubCategoriesUseCase>(
         () => _i356.GetSubCategoriesUseCase(gh<_i653.HomeRepository>()));
-    gh.factory<_i551.CreateOrderUseCase>(
-        () => _i551.CreateOrderUseCase(gh<_i177.OrderRepository>()));
     gh.factory<_i640.RegisterScreenViewModel>(() =>
         _i640.RegisterScreenViewModel(
             registerUseCase: gh<_i772.RegisterUseCase>()));
@@ -185,13 +181,6 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i202.SubCategoriesCubit(gh<_i356.GetSubCategoriesUseCase>()));
     gh.factory<_i483.CategoryCubit>(
         () => _i483.CategoryCubit(useCase: gh<_i51.GetAllCategoriesUseCase>()));
-    gh.factory<_i103.CheckoutCubit>(() => _i103.CheckoutCubit(
-          gh<_i649.CreateCustomerUseCase>(),
-          gh<_i577.CreatePaymentIntentUseCase>(),
-          gh<_i480.CreateEphemeralKeyUseCase>(),
-          gh<_i578.StripeService>(),
-          gh<_i551.CreateOrderUseCase>(),
-        ));
     gh.factory<_i291.CartCubit>(() => _i291.CartCubit(
           getCartUseCase: gh<_i487.GetCartUseCase>(),
           deleteCartItemUseCase: gh<_i914.DeleteCartItemUseCase>(),

@@ -4,8 +4,6 @@ import 'package:flutter_e_commerce_c11_online/data/model/payment_intent/create_p
 import '../../domain/entities/create_payment_intent_request_entity.dart';
 import '../../domain/entities/create_payment_intent_response_entity.dart';
 
-
-
 extension PaymentIntentRequestMapper
     on CreatePaymentIntentRequestEntity {
 
@@ -19,11 +17,13 @@ extension PaymentIntentRequestMapper
 }
 
 extension PaymentIntentResponseMapper
-    on  CreatePaymentIntentResponseModel {
+    on CreatePaymentIntentResponseModel {
 
   CreatePaymentIntentResponseEntity toEntity() {
     return CreatePaymentIntentResponseEntity(
+      id: id ?? "",
       clientSecret: clientSecret ?? "",
+      status: status ?? "",
     );
   }
 }

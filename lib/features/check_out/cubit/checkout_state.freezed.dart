@@ -156,7 +156,8 @@ extension CheckoutStatePatterns on CheckoutState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function()? success,
+    TResult Function(String paymentId, String paymentMethod, String status)?
+        success,
     TResult Function(String message)? failure,
     required TResult orElse(),
   }) {
@@ -167,7 +168,7 @@ extension CheckoutStatePatterns on CheckoutState {
       case Loading() when loading != null:
         return loading();
       case Success() when success != null:
-        return success();
+        return success(_that.paymentId, _that.paymentMethod, _that.status);
       case Failure() when failure != null:
         return failure(_that.message);
       case _:
@@ -192,7 +193,9 @@ extension CheckoutStatePatterns on CheckoutState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function() success,
+    required TResult Function(
+            String paymentId, String paymentMethod, String status)
+        success,
     required TResult Function(String message) failure,
   }) {
     final _that = this;
@@ -202,7 +205,7 @@ extension CheckoutStatePatterns on CheckoutState {
       case Loading():
         return loading();
       case Success():
-        return success();
+        return success(_that.paymentId, _that.paymentMethod, _that.status);
       case Failure():
         return failure(_that.message);
       case _:
@@ -226,7 +229,8 @@ extension CheckoutStatePatterns on CheckoutState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function()? success,
+    TResult? Function(String paymentId, String paymentMethod, String status)?
+        success,
     TResult? Function(String message)? failure,
   }) {
     final _that = this;
@@ -236,7 +240,7 @@ extension CheckoutStatePatterns on CheckoutState {
       case Loading() when loading != null:
         return loading();
       case Success() when success != null:
-        return success();
+        return success(_that.paymentId, _that.paymentMethod, _that.status);
       case Failure() when failure != null:
         return failure(_that.message);
       case _:
@@ -288,20 +292,82 @@ class Loading implements CheckoutState {
 /// @nodoc
 
 class Success implements CheckoutState {
-  const Success();
+  const Success(
+      {required this.paymentId,
+      required this.paymentMethod,
+      required this.status});
+
+  final String paymentId;
+  final String paymentMethod;
+  final String status;
+
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  $SuccessCopyWith<Success> get copyWith =>
+      _$SuccessCopyWithImpl<Success>(this, _$identity);
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is Success);
+        (other.runtimeType == runtimeType &&
+            other is Success &&
+            (identical(other.paymentId, paymentId) ||
+                other.paymentId == paymentId) &&
+            (identical(other.paymentMethod, paymentMethod) ||
+                other.paymentMethod == paymentMethod) &&
+            (identical(other.status, status) || other.status == status));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      Object.hash(runtimeType, paymentId, paymentMethod, status);
 
   @override
   String toString() {
-    return 'CheckoutState.success()';
+    return 'CheckoutState.success(paymentId: $paymentId, paymentMethod: $paymentMethod, status: $status)';
+  }
+}
+
+/// @nodoc
+abstract mixin class $SuccessCopyWith<$Res>
+    implements $CheckoutStateCopyWith<$Res> {
+  factory $SuccessCopyWith(Success value, $Res Function(Success) _then) =
+      _$SuccessCopyWithImpl;
+  @useResult
+  $Res call({String paymentId, String paymentMethod, String status});
+}
+
+/// @nodoc
+class _$SuccessCopyWithImpl<$Res> implements $SuccessCopyWith<$Res> {
+  _$SuccessCopyWithImpl(this._self, this._then);
+
+  final Success _self;
+  final $Res Function(Success) _then;
+
+  /// Create a copy of CheckoutState
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? paymentId = null,
+    Object? paymentMethod = null,
+    Object? status = null,
+  }) {
+    return _then(Success(
+      paymentId: null == paymentId
+          ? _self.paymentId
+          : paymentId // ignore: cast_nullable_to_non_nullable
+              as String,
+      paymentMethod: null == paymentMethod
+          ? _self.paymentMethod
+          : paymentMethod // ignore: cast_nullable_to_non_nullable
+              as String,
+      status: null == status
+          ? _self.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
   }
 }
 

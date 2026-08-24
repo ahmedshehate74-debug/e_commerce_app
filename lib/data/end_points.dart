@@ -10,8 +10,8 @@ class EndPoints {
   static const String addToCart = '/api/v1/cart';
   static const String getCart = '/api/v1/cart';
   static const String updateCart = '/api/v1/cart';
- static const String createOrder =
-      "/orders";
+//  static const String createOrder =
+//       "/orders";
   // Wishlist
   static const String wishlist = '/api/v1/wishlist';
 
