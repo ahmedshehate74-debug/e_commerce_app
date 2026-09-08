@@ -73,209 +73,193 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<WishlistCubit, WishlistState>(
-  listener: (context, state) {
-    context.read<ProductsCubit>().refreshFavouriteIds();
-  },
-  child: SingleChildScrollView(
-      child: Column(
-        children: [
-          CustomAdsWidget(
-            adsImages: adsImages,
-            currentIndex: _currentIndex,
-            timer: _timer,
-          ),
-          Column(
-            children: [
-              CustomSectionBar(
-                sectionNname: 'Categories',
-                function: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider.value(
-                        value: context.read<CategoryCubit>(),
-                        child: const CategoriesScreen(),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              BlocBuilder<CategoryCubit, CategoryState>(
-                builder: (context, state) {
-                  if (state is CategoryLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  if (state is CategorySuccess) {
-                    final categories = state.categories;
-
-                    return SizedBox(
-                      height: 270.h,
-                      child: GridView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: categories.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                        ),
-                        itemBuilder: (context, index) {
-                          return CustomCategoryWidget(
-                            title: categories[index].name,
-                            image: categories[index].image,
-                          );
-                        },
-                      ),
-                    );
-                  }
-
-                  return const SizedBox();
-                },
-              ),
-              SizedBox(height: 12.h),
-              CustomSectionBar(
-                  sectionNname: 'Brands',
+      listener: (context, state) {
+        context.read<ProductsCubit>().refreshFavouriteIds();
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            CustomAdsWidget(
+              adsImages: adsImages,
+              currentIndex: _currentIndex,
+              timer: _timer,
+            ),
+            Column(
+              children: [
+                CustomSectionBar(
+                  sectionNname: 'Categories',
                   function: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (_) => BlocProvider.value(
-                          value: context.read<BrandCubit>(),
-                          child: const BrandsScreen(),
+                          value: context.read<CategoryCubit>(),
+                          child: const CategoriesScreen(),
                         ),
                       ),
                     );
-                  }),
-              BlocBuilder<BrandCubit, BrandState>(
-                builder: (context, state) {
-                  if (state is BrandLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+                  },
+                ),
+                BlocBuilder<CategoryCubit, CategoryState>(
+                  builder: (context, state) {
+                    if (state is CategoryLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                  if (state is BrandSuccess) {
-                    final brands = state.brands;
+                    if (state is CategorySuccess) {
+                      final categories = state.categories;
 
-                    return SizedBox(
-                      height: 270.h,
-                      child: GridView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: brands.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
+                      return SizedBox(
+                        height: 270.h,
+                        child: GridView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: categories.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                          ),
+                          itemBuilder: (context, index) {
+                            return CustomCategoryWidget(
+                              title: categories[index].name,
+                              image: categories[index].image,
+                            );
+                          },
                         ),
-                        itemBuilder: (context, index) {
-                          return CustomBrandWidget(
-                            image: brands[index].image,
-                            name: brands[index].name,
-                          );
-                        },
-                      ),
-                    );
-                  }
+                      );
+                    }
 
-                  if (state is BrandError) {
-                    return Center(
-                      child: Text(
-                        state.failures.errorMessage,
-                      ),
-                    );
-                  }
-
-                  return const SizedBox();
-                },
-              ),
-              CustomSectionBar(
-                sectionNname: 'Most Selling Products',
-                function: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const ProductsScreen(),
-                    ),
-                  );
-                },
-              ),
-              BlocBuilder<ProductsCubit, ProductState>(
-                builder: (context, state) {
-                  if (state is ProductLoading) {
-                    return const SizedBox(
-                      height: 360,
-                      child: Center(
+                    return const SizedBox();
+                  },
+                ),
+                SizedBox(height: 12.h),
+                CustomSectionBar(
+                    sectionNname: 'Brands',
+                    function: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => BlocProvider.value(
+                            value: context.read<BrandCubit>(),
+                            child: const BrandsScreen(),
+                          ),
+                        ),
+                      );
+                    }),
+                BlocBuilder<BrandCubit, BrandState>(
+                  builder: (context, state) {
+                    if (state is BrandLoading) {
+                      return const Center(
                         child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
+                      );
+                    }
 
-                  if (state is ProductError) {
-                    return SizedBox(
-                      height: 360,
-                      child: Center(
+                    if (state is BrandSuccess) {
+                      final brands = state.brands;
+                      return SizedBox(
+                        height: 270.h,
+                        child: GridView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: brands.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                          ),
+                          itemBuilder: (context, index) {
+                            return CustomBrandWidget(
+                              image: brands[index].image,
+                              name: brands[index].name,
+                            );
+                          },
+                        ),
+                      );
+                    }
+
+                    if (state is BrandError) {
+                      return Center(
                         child: Text(
                           state.failures.errorMessage,
                         ),
+                      );
+                    }
+
+                    return const SizedBox();
+                  },
+                ),
+                CustomSectionBar(
+                  sectionNname: 'Most Selling Products',
+                  function: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const ProductsScreen(),
                       ),
                     );
-                  }
+                  },
+                ),
+                BlocBuilder<ProductsCubit, ProductState>(
+                  builder: (context, state) {
+                    if (state is ProductLoading) {
+                      return const SizedBox(
+                        height: 360,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
 
-                  if (state is ProductSuccess) {
-                    return SizedBox(
-                        height: 360.h,
-                        child: ListView.builder(
-                          controller: _productsController,
-                          scrollDirection: Axis.horizontal,
-                          itemCount:
-                              state.products.length + (state.hasMore ? 1 : 0),
-                          itemBuilder: (context, index) {
-                            if (index == state.products.length) {
-                              return const SizedBox(
-                                width: 120,
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
+                    if (state is ProductError) {
+                      return SizedBox(
+                        height: 360,
+                        child: Center(
+                          child: Text(
+                            state.failures.errorMessage,
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (state is ProductSuccess) {
+                      return SizedBox(
+                          height: 360.h,
+                          child: ListView.builder(
+                            controller: _productsController,
+                            scrollDirection: Axis.horizontal,
+                            itemCount:
+                                state.products.length + (state.hasMore ? 1 : 0),
+                            itemBuilder: (context, index) {
+                              if (index == state.products.length) {
+                                return const SizedBox(
+                                  width: 120,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+
+                              final product = state.products[index];
+
+                              return ProductCard(
+                                id: product.id,
+                                title: product.title,
+                                description: product.description,
+                                rating: product.rating,
+                                price: product.price,
+                                priceBeforeDiscound: product.priceAfterDiscount,
+                                image: product.image,
                               );
-                            }
+                            },
+                          ));
+                    }
 
-                            final product = state.products[index];
-
-                            return ProductCard(
-                              id: product.id,
-                              title: product.title,
-                              description: product.description,
-                              rating: product.rating,
-                              price: product.price,
-                              priceBeforeDiscound: product.priceAfterDiscount,
-                              image: product.image,
-                              onWishlistTap: () async {
-  final wishlistCubit = context.read<WishlistCubit>();
-
-  if (wishlistCubit.isFavourite(product.id)) {
-    await wishlistCubit.removeWishlist(
-      productId: product.id,
-    );
-  } else {
-    await wishlistCubit.addToWishlist(
-      productId: product.id,
-    );
-  }
-},
-                              
-                            );
-                          },
-                        ));
-                  }
-
-                  return const SizedBox();
-                },
-              ),
-              SizedBox(height: 12.h),
-            ],
-          )
-        ],
+                    return const SizedBox();
+                  },
+                ),
+                SizedBox(height: 12.h),
+              ],
+            )
+          ],
+        ),
       ),
-    ),
-
     );
   }
 }

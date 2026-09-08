@@ -68,41 +68,47 @@ class HomeDataSourceImpl implements HomeRemoteDataSource {
     }
   }
 
-  @override
-  Future<Either<Failures, ProductPageEntity>> getAllProducts({
-    required int page,
-    String? subCategoryId,
-  }) async {
-    try {
-      print("========== GET PRODUCTS ==========");
-      print({
+ @override
+Future<Either<Failures, ProductPageEntity>> getAllProducts({
+  required int page,
+  String? subCategoryId,
+  String? keyword,
+}) async {
+  try {
+    print("========== GET PRODUCTS ==========");
+    print({
+      "page": page,
+      "subcategory": subCategoryId,
+      "keyword": keyword,
+    });
+
+    final response = await apiManager.getData(
+      EndPoints.getAllProducts,
+      queryParameters: {
         "page": page,
-        "subcategory": subCategoryId,
-      });
-      final response = await apiManager.getData(
-        EndPoints.getAllProducts,
-        queryParameters: {
-          "page": page,
-          if (subCategoryId != null) "subcategory": subCategoryId,
-        },
-      );
+        if (subCategoryId != null)
+          "subcategory": subCategoryId,
+        if (keyword != null && keyword.trim().isNotEmpty)
+          "keyword": keyword.trim(),
+      },
+    );
 
-      print("URL = ${response.requestOptions.uri}");
+    print("URL = ${response.requestOptions.uri}");
 
-      final result = ProductPageResponseDto.fromJson(response.data);
+    final result =
+        ProductPageResponseDto.fromJson(response.data);
 
-      return Right(result.toEntity());
-    } catch (e) {
-      print("ERROR = $e");
+    return Right(result.toEntity());
+  } catch (e) {
+    print("ERROR = $e");
 
-      return Left(
-        UnexpectedError(
-          errorMessage: e.toString(),
-        ),
-      );
-    }
+    return Left(
+      UnexpectedError(
+        errorMessage: e.toString(),
+      ),
+    );
   }
-
+}
   @override
   Future<Either<Failures, ProductDetailsEntity>> getProductDetails({
     required String id,
@@ -362,6 +368,4 @@ class HomeDataSourceImpl implements HomeRemoteDataSource {
       );
     }
   }
-
- 
 }

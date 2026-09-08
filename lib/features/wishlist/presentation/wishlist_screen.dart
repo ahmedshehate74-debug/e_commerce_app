@@ -13,11 +13,7 @@ class WishlistScreen extends StatefulWidget {
 
 class _WishlistScreenState extends State<WishlistScreen> {
   @override
-  void initState() {
-    super.initState();
-
-    WishlistCubit.get(context).getWishlist();
-  }
+ 
 
   @override
   Widget build(BuildContext context) {

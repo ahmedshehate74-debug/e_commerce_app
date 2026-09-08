@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_e_commerce_c11_online/core/routes_manager/routes.dart';
+import 'package:flutter_e_commerce_c11_online/core/widget/heart_button.dart';
 import 'package:flutter_e_commerce_c11_online/features/wishlist/cubit/wishlist_cubit.dart';
+import 'package:flutter_e_commerce_c11_online/features/wishlist/cubit/wishlist_state.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../resources/assets_manager.dart';
 import '../resources/color_manager.dart';
@@ -14,7 +17,7 @@ class ProductCard extends StatelessWidget {
   final double priceBeforeDiscound;
   final double rating;
   final String id;
-  final VoidCallback? onWishlistTap;
+
 
   const ProductCard({
     super.key,
@@ -23,8 +26,9 @@ class ProductCard extends StatelessWidget {
     required this.price,
     required this.rating,
     required this.priceBeforeDiscound,
-    required this.description, required this.id,
-     this.onWishlistTap,
+    required this.description,
+    required this.id,
+
   });
   String truncateTitle(String title) {
     List<String> words = title.split(' ');
@@ -45,11 +49,10 @@ class ProductCard extends StatelessWidget {
       child: InkWell(
         onTap: () {
           Navigator.pushNamed(
-        context,
-        Routes.productDetails,
-        arguments: id,
-      );
-        
+            context,
+            Routes.productDetails,
+            arguments: id,
+          );
         },
         child: Container(
           width: 280,
@@ -84,7 +87,7 @@ class ProductCard extends StatelessWidget {
               //     ),
               //   ),
               // ),
-        
+
               Expanded(
                 flex: 4,
                 child: Stack(
@@ -104,7 +107,7 @@ class ProductCard extends StatelessWidget {
                             fit: BoxFit.cover,
                             loadingBuilder: (_, child, progress) {
                               if (progress == null) return child;
-        
+
                               return const Center(
                                 child: CircularProgressIndicator(),
                               );
@@ -134,13 +137,28 @@ class ProductCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: InkWell(
-  onTap:  onWishlistTap,
-  child: Image.asset(
-    IconsAssets.icWithList,
-    color: ColorManager.primary,
-  ),
-),
+                        child: BlocBuilder<WishlistCubit, WishlistState>(
+                          builder: (context, state) {
+                            final wishlistCubit = context.read<WishlistCubit>();
+
+                            final isFavourite = wishlistCubit.isFavourite(id);
+
+                            return HeartButton(
+                              isFavourite: isFavourite,
+                              onTap: () async {
+                                if (isFavourite) {
+                                  await wishlistCubit.removeWishlist(
+                                    productId: id,
+                                  );
+                                } else {
+                                  await wishlistCubit.addToWishlist(
+                                    productId: id,
+                                  );
+                                }
+                              },
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ],
@@ -170,7 +188,6 @@ class ProductCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

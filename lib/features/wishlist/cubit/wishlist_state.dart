@@ -1,4 +1,3 @@
-
 import 'package:flutter_e_commerce_c11_online/domain/entities/produect_entity.dart';
 import 'package:flutter_e_commerce_c11_online/domain/failures.dart';
 
@@ -12,6 +11,12 @@ class WishlistSuccess extends WishlistState {
   final List<ProductEntity> products;
 
   WishlistSuccess(this.products);
+}
+
+class WishlistUpdated extends WishlistState {
+  final Set<String> favouriteIds;
+
+  WishlistUpdated(this.favouriteIds);
 }
 
 class WishlistError extends WishlistState {

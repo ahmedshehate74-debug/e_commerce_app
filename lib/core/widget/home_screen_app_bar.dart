@@ -97,8 +97,8 @@ class HomeScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
 
           if (cartCount > 0)
             Positioned(
-              right: -4,
-              top: -4,
+              right: -3.w,
+              top: -4.h,
               child: Container(
                 padding: const EdgeInsets.all(4),
                 decoration: const BoxDecoration(

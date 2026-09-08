@@ -14,10 +14,12 @@ class GetAllProductsUseCase {
   Future<Either<Failures, ProductPageEntity>> call({
     required int page,
     String? subCategoryId,
+    String? keyword,
   }) {
     return repository.getAllProducts(
       page: page,
       subCategoryId: subCategoryId,
+      keyword: keyword,
     );
   }
 }

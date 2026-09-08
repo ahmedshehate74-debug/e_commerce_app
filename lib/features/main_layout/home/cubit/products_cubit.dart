@@ -24,22 +24,28 @@ class ProductsCubit extends Cubit<ProductState> {
   bool isLoadingMore = false;
 
   String? currentSubCategoryId;
+  String? currentKeyword;
 
   /// أول تحميل للشاشة
   Future<void> getProducts({
     String? subCategoryId,
+    String? keyword,
   }) async {
     emit(ProductLoading());
-       currentSubCategoryId = subCategoryId;
+
+    currentSubCategoryId = subCategoryId;
+    currentKeyword = keyword;
+
     currentPage = 1;
     hasMore = true;
     products.clear();
-    
-print("SUB CATEGORY ID = $currentSubCategoryId");
+
     final result = await getAllProductsUseCase(
       page: currentPage,
       subCategoryId: currentSubCategoryId,
+      keyword: currentKeyword,
     );
+
     result.fold(
       (failure) {
         emit(ProductError(failure));
@@ -48,7 +54,6 @@ print("SUB CATEGORY ID = $currentSubCategoryId");
         products = pageEntity.products;
 
         currentPage++;
-
         hasMore = pageEntity.hasMore;
 
         emit(
@@ -77,9 +82,10 @@ print("SUB CATEGORY ID = $currentSubCategoryId");
     );
 
     final result = await getAllProductsUseCase(
-  page: currentPage,
-  subCategoryId: currentSubCategoryId,
-);
+      page: currentPage,
+      subCategoryId: currentSubCategoryId,
+      keyword: currentKeyword,
+    );
 
     result.fold(
       (failure) {

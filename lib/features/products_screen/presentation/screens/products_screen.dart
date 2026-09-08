@@ -5,7 +5,7 @@ import 'package:flutter_e_commerce_c11_online/features/main_layout/home/cubit/pr
 
 import '../../../../core/resources/values_manager.dart';
 import '../../../../core/widget/home_screen_app_bar.dart';
-import '../widgets/custom_product_widget.dart';
+import '../../widgets/custom_product_widget.dart';
 
 class ProductsScreen extends StatefulWidget {
   final String? subCategoryId;
@@ -23,8 +23,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   late ScrollController scrollController;
 
   @override
-  @override
-  @override
+
   void initState() {
 
     super.initState();

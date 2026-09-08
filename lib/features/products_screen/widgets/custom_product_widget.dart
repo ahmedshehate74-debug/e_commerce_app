@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../core/resources/color_manager.dart';
-import '../../../../core/resources/styles_manager.dart';
-import '../../../../core/routes_manager/routes.dart';
-import '../../../../core/widget/heart_button.dart';
+import '../../../core/resources/color_manager.dart';
+import '../../../core/resources/styles_manager.dart';
+import '../../../core/routes_manager/routes.dart';
+import '../../../core/widget/heart_button.dart';
 
-import '../../../wishlist/cubit/wishlist_cubit.dart';
-import '../../../wishlist/cubit/wishlist_state.dart';
+import '../../wishlist/cubit/wishlist_cubit.dart';
+import '../../wishlist/cubit/wishlist_state.dart';
 
 class CustomProductWidget extends StatelessWidget {
   final double width;
@@ -19,7 +19,7 @@ class CustomProductWidget extends StatelessWidget {
   final double price;
   final double priceAfterDiscount;
   final double rating;
- final String id;
+  final String id;
 
   const CustomProductWidget({
     super.key,
@@ -97,17 +97,20 @@ class CustomProductWidget extends StatelessWidget {
                       },
                     ),
                   ),
-
                   Positioned(
                     top: 8,
                     right: 8,
                     child: BlocBuilder<WishlistCubit, WishlistState>(
                       builder: (context, state) {
-                        final wishlistCubit =
-                            context.read<WishlistCubit>();
+                        final wishlistCubit = context.read<WishlistCubit>();
 
-                        final isFavourite =
-                            wishlistCubit.isFavourite(id);
+                        final isFavourite = wishlistCubit.isFavourite(id);
+
+                        print("❤️ PRODUCT ID = $id");
+                        print("❤️ IS FAVOURITE = $isFavourite");
+                        print(
+                            "❤️ FAVOURITE IDS = ${wishlistCubit.favouriteIds}");
+                        print("❤️ STATE = ${state.runtimeType}");
 
                         return HeartButton(
                           isFavourite: isFavourite,
@@ -115,7 +118,6 @@ class CustomProductWidget extends StatelessWidget {
                             if (isFavourite) {
                               await wishlistCubit.removeWishlist(
                                 productId: id,
-                                
                               );
                             } else {
                               await wishlistCubit.addToWishlist(
@@ -135,8 +137,7 @@ class CustomProductWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(6),
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       truncateTitle(title),
@@ -145,9 +146,7 @@ class CustomProductWidget extends StatelessWidget {
                         fontSize: 14.sp,
                       ),
                     ),
-
                     SizedBox(height: 4.h),
-
                     Text(
                       truncateDescription(description),
                       style: getRegularStyle(
@@ -155,12 +154,9 @@ class CustomProductWidget extends StatelessWidget {
                         fontSize: 13.sp,
                       ),
                     ),
-
                     SizedBox(height: 8.h),
-
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           "EGP $price",
@@ -175,9 +171,7 @@ class CustomProductWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     const Spacer(),
-
                     Row(
                       children: [
                         Text(
@@ -198,7 +192,7 @@ class CustomProductWidget extends StatelessWidget {
                           child: Container(
                             width: 34,
                             height: 34,
-                            decoration:  BoxDecoration(
+                            decoration: BoxDecoration(
                               color: ColorManager.primary,
                               shape: BoxShape.circle,
                             ),

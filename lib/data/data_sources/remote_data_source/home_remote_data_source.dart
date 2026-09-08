@@ -13,9 +13,11 @@ abstract class HomeRemoteDataSource {
 
   Future<Either<Failures, List<BrandEntity>>> getBrands();
 
-  Future<Either<Failures, ProductPageEntity>> getAllProducts({
-    required int page, String? subCategoryId,
-  });
+ Future<Either<Failures, ProductPageEntity>> getAllProducts({
+  required int page,
+  String? subCategoryId,
+  String? keyword,
+});
   Future<Either<Failures, ProductDetailsEntity>>
     getProductDetails({
   required String id,

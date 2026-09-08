@@ -22,94 +22,102 @@ class HomeRepositoryImpl implements HomeRepository {
     return remote.getCategories();
   }
 
-   @override
+  @override
   Future<Either<Failures, List<BrandEntity>>> getAllBrands() {
     return remote.getBrands();
   }
-@override
-Future<Either<Failures, ProductPageEntity>> getAllProducts({
-  required int page,
-  String? subCategoryId,
-}) {
-  return remote.getAllProducts(
-    page: page,
-    subCategoryId: subCategoryId,
-  );
-}
+
   @override
-  Future<Either<Failures, ProductDetailsEntity>> getProductDetails({required String id}) {
+  Future<Either<Failures, ProductPageEntity>> getAllProducts({
+    required int page,
+    String? subCategoryId,
+    String? keyword,
+  }) {
+    return remote.getAllProducts(
+      page: page,
+      subCategoryId: subCategoryId,
+      keyword: keyword,
+    );
+  }
+
+  @override
+  Future<Either<Failures, ProductDetailsEntity>> getProductDetails(
+      {required String id}) {
     return remote.getProductDetails(id: id);
   }
+
   @override
-Future<Either<Failures, String>> addToCart({
-  required String productId,
-}) {
-  return remote.addToCart(
-    productId: productId,
-  );
-}
-@override
-Future<Either<Failures, CartEntity>> getCart() {
-  return remote.getCart();
-}
-@override
-Future<Either<Failures, String>> deleteCartItem({
-  required String cartItemId,
-}) {
-  return remote.deleteCartItem(
-    cartItemId: cartItemId,
-  );
-}
-@override
-Future<Either<Failures, CartEntity>> updateCartCount({
-  required String cartItemId,
-  required int count,
-}) {
-  return remote.updateCartCount(
-    cartItemId: cartItemId,
-    count: count,
-  );
-}
-@override
-Future<Either<Failures, List<ProductEntity>>> getWishlist() {
-  return remote.getWishlist();
-}
+  Future<Either<Failures, String>> addToCart({
+    required String productId,
+  }) {
+    return remote.addToCart(
+      productId: productId,
+    );
+  }
 
-@override
-Future<Either<Failures, String>> removeWishlist({
-  required String productId,
-}) {
-  return remote.removeWishlist(
-    productId: productId,
-  );
-}
+  @override
+  Future<Either<Failures, CartEntity>> getCart() {
+    return remote.getCart();
+  }
 
-@override
-Future<Either<Failures, String>> addToWishlist({
-  required String productId,
-}) {
-  return remote.addToWishlist(
-    productId: productId,
-  );
-}
-@override
+  @override
+  Future<Either<Failures, String>> deleteCartItem({
+    required String cartItemId,
+  }) {
+    return remote.deleteCartItem(
+      cartItemId: cartItemId,
+    );
+  }
 
-Future<Either<Failures, List<SubCategoryEntity>>>
-    getSubCategories({
-  required String categoryId,
-}) {
-  return remote.getSubCategories(
-    categoryId: categoryId,
-  );
-}
-@override
-Future<Either<Failures, ProductPageEntity>>
-    getProductsBySubCategory({
-  required String subCategoryId,
-}) {
-  return remote.getProductsBySubCategory(
-    subCategoryId: subCategoryId,
-  );
-}
+  @override
+  Future<Either<Failures, CartEntity>> updateCartCount({
+    required String cartItemId,
+    required int count,
+  }) {
+    return remote.updateCartCount(
+      cartItemId: cartItemId,
+      count: count,
+    );
+  }
 
+  @override
+  Future<Either<Failures, List<ProductEntity>>> getWishlist() {
+    return remote.getWishlist();
+  }
+
+  @override
+  Future<Either<Failures, String>> removeWishlist({
+    required String productId,
+  }) {
+    return remote.removeWishlist(
+      productId: productId,
+    );
+  }
+
+  @override
+  Future<Either<Failures, String>> addToWishlist({
+    required String productId,
+  }) {
+    return remote.addToWishlist(
+      productId: productId,
+    );
+  }
+
+  @override
+  Future<Either<Failures, List<SubCategoryEntity>>> getSubCategories({
+    required String categoryId,
+  }) {
+    return remote.getSubCategories(
+      categoryId: categoryId,
+    );
+  }
+
+  @override
+  Future<Either<Failures, ProductPageEntity>> getProductsBySubCategory({
+    required String subCategoryId,
+  }) {
+    return remote.getProductsBySubCategory(
+      subCategoryId: subCategoryId,
+    );
+  }
 }
