@@ -13,4 +13,5 @@ class Routes {
   static const String paymentMethod = "/paymentMethod";
 
   static const String successScreen = "/successScreen";
+  static const String searchRoute = "/search";
 }

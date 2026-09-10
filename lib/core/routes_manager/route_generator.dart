@@ -17,14 +17,24 @@ import '../../features/auth/presentation/screens/sign_up/sign_up_screen.dart';
 import '../../features/main_layout/main_layout.dart';
 import '../../features/product_details/presentation/screen/product_details.dart';
 import '../../features/products_screen/presentation/screens/products_screen.dart';
+import '../../features/search/cubit/search_cubit.dart';
+import '../../features/search/presentation/screens/search_screen.dart';
 
 class RouteGenerator {
   static Route<dynamic> getRoute(RouteSettings settings) {
     switch (settings.name) {
-     case Routes.cartRoute:
-  return MaterialPageRoute(
-    builder: (_) => const CartScreen(),
-  );
+      case Routes.searchRoute:
+        final initialQuery = settings.arguments as String?;
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (_) => getIt<SearchCubit>(),
+            child: SearchScreen(initialQuery: initialQuery),
+          ),
+        );
+      case Routes.cartRoute:
+        return MaterialPageRoute(
+          builder: (_) => const CartScreen(),
+        );
       case Routes.mainRoute:
         return MaterialPageRoute(builder: (_) => const MainLayout());
 

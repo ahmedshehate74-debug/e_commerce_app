@@ -6,6 +6,10 @@ class ProductEntity {
   final double price;
   final double priceAfterDiscount;
   final double rating;
+  final String? categoryId;
+  final String? categoryName;
+  final String? brandId;
+  final String? brandName;
 
   ProductEntity({
     required this.id,
@@ -15,5 +19,9 @@ class ProductEntity {
     required this.price,
     required this.priceAfterDiscount,
     required this.rating,
+    this.categoryId,
+    this.categoryName,
+    this.brandId,
+    this.brandName,
   });
 }

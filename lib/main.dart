@@ -62,10 +62,10 @@ void main() async {
         BlocProvider(
           create: (_) => getIt<SubCategoriesCubit>(),
         ),
-            // أضف ده
-    BlocProvider(
-      create: (_) => getIt<CheckoutCubit>(),
-    ),
+        // أضف ده
+        BlocProvider(
+          create: (_) => getIt<CheckoutCubit>(),
+        ),
       ],
       child: MyApp(
         route: token == null ? Routes.signInRoute : Routes.mainRoute,

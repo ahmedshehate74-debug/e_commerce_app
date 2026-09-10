@@ -17,6 +17,7 @@ abstract class HomeRemoteDataSource {
   required int page,
   String? subCategoryId,
   String? keyword,
+  int? limit,
 });
   Future<Either<Failures, ProductDetailsEntity>>
     getProductDetails({

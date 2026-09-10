@@ -32,11 +32,13 @@ class HomeRepositoryImpl implements HomeRepository {
     required int page,
     String? subCategoryId,
     String? keyword,
+    int? limit,
   }) {
     return remote.getAllProducts(
       page: page,
       subCategoryId: subCategoryId,
       keyword: keyword,
+      limit: limit,
     );
   }
 

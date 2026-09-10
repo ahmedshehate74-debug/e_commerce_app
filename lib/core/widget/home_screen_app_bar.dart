@@ -12,8 +12,14 @@ import '../resources/values_manager.dart';
 import '../routes_manager/routes.dart';
 
 class HomeScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
- final bool? automaticallyImplyLeading;
-  const HomeScreenAppBar({super.key, this.automaticallyImplyLeading});
+  final bool? automaticallyImplyLeading;
+  final VoidCallback? onSearchTap;
+
+  const HomeScreenAppBar({
+    super.key,
+    this.automaticallyImplyLeading,
+    this.onSearchTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +27,13 @@ class HomeScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
       surfaceTintColor: Colors.white,
-      automaticallyImplyLeading: automaticallyImplyLeading??false,
+      automaticallyImplyLeading: automaticallyImplyLeading ?? false,
       title: SvgPicture.asset(
         SvgAssets.routeLogo,
         height: 25.h,
         width: 25.w,
         colorFilter:
-            const ColorFilter.mode(ColorManager.textColor,
-                BlendMode.srcIn),
+            const ColorFilter.mode(ColorManager.textColor, BlendMode.srcIn),
       ),
       bottom: PreferredSize(
           preferredSize: const Size(AppSize.s100, AppSize.s60),
@@ -37,41 +42,51 @@ class HomeScreenAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: TextFormField(
-                    cursorColor: ColorManager.primary,
-                    style: getRegularStyle(
-                        color: ColorManager.primary, fontSize: FontSize.s16),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: AppMargin.m12.w,
-                          vertical: AppMargin.m8.h),
-                      focusedErrorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10000),
-                          borderSide: BorderSide(
-                              width: AppSize.s1, color: ColorManager.primary)),
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10000),
-                          borderSide: BorderSide(
-                              width: AppSize.s1, color: ColorManager.primary)),
-                      disabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10000),
-                          borderSide: BorderSide(
-                              width: AppSize.s1, color: ColorManager.primary)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10000),
-                          borderSide: BorderSide(
-                              width: AppSize.s1, color: ColorManager.primary)),
-                      errorBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10000),
-                          borderSide: BorderSide(
-                              width: AppSize.s1, color: ColorManager.error)),
-                      prefixIcon: ImageIcon(
-                        AssetImage(IconsAssets.icSearch),
-                        color: ColorManager.primary,
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: onSearchTap ??
+                        () {
+                          Navigator.pushNamed(context, Routes.searchRoute);
+                        },
+                    child: AbsorbPointer(
+                      child: TextFormField(
+                        readOnly: true,
+                        cursorColor: ColorManager.primary,
+                        style: getRegularStyle(
+                            color: ColorManager.primary, fontSize: FontSize.s16),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: AppMargin.m12.w,
+                              vertical: AppMargin.m8.h),
+                          focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10000),
+                              borderSide: BorderSide(
+                                  width: AppSize.s1, color: ColorManager.primary)),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10000),
+                              borderSide: BorderSide(
+                                  width: AppSize.s1, color: ColorManager.primary)),
+                          disabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10000),
+                              borderSide: BorderSide(
+                                  width: AppSize.s1, color: ColorManager.primary)),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10000),
+                              borderSide: BorderSide(
+                                  width: AppSize.s1, color: ColorManager.primary)),
+                          errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10000),
+                              borderSide: BorderSide(
+                                  width: AppSize.s1, color: ColorManager.error)),
+                          prefixIcon: ImageIcon(
+                            AssetImage(IconsAssets.icSearch),
+                            color: ColorManager.primary,
+                          ),
+                          hintText: "what do you search for?",
+                          hintStyle: getRegularStyle(
+                              color: ColorManager.grey, fontSize: FontSize.s16),
+                        ),
                       ),
-                      hintText: "what do you search for?",
-                      hintStyle: getRegularStyle(
-                          color: ColorManager.primary, fontSize: FontSize.s16),
                     ),
                   ),
                 ),

@@ -8,6 +8,10 @@ class ProductDto {
   final double price;
   final double? priceAfterDiscount;
   final double ratingsAverage;
+  final String? categoryId;
+  final String? categoryName;
+  final String? brandId;
+  final String? brandName;
 
   ProductDto({
     required this.id,
@@ -17,11 +21,37 @@ class ProductDto {
     required this.price,
     this.priceAfterDiscount,
     required this.ratingsAverage,
+    this.categoryId,
+    this.categoryName,
+    this.brandId,
+    this.brandName,
   });
 
   factory ProductDto.fromJson(
     Map<String, dynamic> json,
   ) {
+    String? catId;
+    String? catName;
+    if (json['category'] != null) {
+      if (json['category'] is Map<String, dynamic>) {
+        catId = json['category']['_id']?.toString();
+        catName = json['category']['name']?.toString();
+      } else if (json['category'] is String) {
+        catId = json['category'] as String;
+      }
+    }
+
+    String? brId;
+    String? brName;
+    if (json['brand'] != null) {
+      if (json['brand'] is Map<String, dynamic>) {
+        brId = json['brand']['_id']?.toString();
+        brName = json['brand']['name']?.toString();
+      } else if (json['brand'] is String) {
+        brId = json['brand'] as String;
+      }
+    }
+
     return ProductDto(
       id: json['_id'],
       title: json['title'],
@@ -32,6 +62,10 @@ class ProductDto {
           (json['priceAfterDiscount'] as num?)?.toDouble(),
       ratingsAverage:
           (json['ratingsAverage'] as num).toDouble(),
+      categoryId: catId,
+      categoryName: catName,
+      brandId: brId,
+      brandName: brName,
     );
   }
 
@@ -45,6 +79,10 @@ class ProductDto {
       price: price,
       priceAfterDiscount: priceAfterDiscount ?? price,
       rating: ratingsAverage,
+      categoryId: categoryId,
+      categoryName: categoryName,
+      brandId: brandId,
+      brandName: brandName,
     );
   }
 }

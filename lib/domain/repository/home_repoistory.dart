@@ -19,6 +19,7 @@ abstract class HomeRepository {
     required int page,
     String? subCategoryId,
     String? keyword,
+    int? limit,
   });
 
   // Product Details

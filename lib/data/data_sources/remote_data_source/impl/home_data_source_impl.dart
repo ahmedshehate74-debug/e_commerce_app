@@ -73,6 +73,7 @@ Future<Either<Failures, ProductPageEntity>> getAllProducts({
   required int page,
   String? subCategoryId,
   String? keyword,
+  int? limit,
 }) async {
   try {
     print("========== GET PRODUCTS ==========");
@@ -80,12 +81,15 @@ Future<Either<Failures, ProductPageEntity>> getAllProducts({
       "page": page,
       "subcategory": subCategoryId,
       "keyword": keyword,
+      "limit": limit,
     });
 
     final response = await apiManager.getData(
       EndPoints.getAllProducts,
       queryParameters: {
         "page": page,
+        if (limit != null)
+          "limit": limit,
         if (subCategoryId != null)
           "subcategory": subCategoryId,
         if (keyword != null && keyword.trim().isNotEmpty)

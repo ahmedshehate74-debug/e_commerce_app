@@ -15,11 +15,13 @@ class GetAllProductsUseCase {
     required int page,
     String? subCategoryId,
     String? keyword,
+    int? limit,
   }) {
     return repository.getAllProducts(
       page: page,
       subCategoryId: subCategoryId,
       keyword: keyword,
+      limit: limit,
     );
   }
 }
